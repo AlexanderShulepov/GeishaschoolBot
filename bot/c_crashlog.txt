@@ -1,1 +1,1 @@
-name 'message' is not defined
+('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))

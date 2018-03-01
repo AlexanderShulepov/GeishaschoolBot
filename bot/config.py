@@ -9,6 +9,7 @@ bot = telebot.TeleBot(TOKEN)
 ##MODULES
 ####################
 import json
+from models import *
 ####################
 ##CONSTS
 ####################
@@ -21,7 +22,8 @@ FINISH_THIS="Honey, finish this test before"
 def send_message(id,mgs):
 	bot.send_message(id, mgs)
 
-def send_question(id,question):
+def send_question(id,username):
+		question=get_question(username)
 		mass=["А","Б","В","Г",]
 		keyboard = types.InlineKeyboardMarkup()
 		question=json.loads(question)

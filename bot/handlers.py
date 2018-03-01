@@ -15,18 +15,18 @@ def handle_commands(message):
 
 		elif message.text=="/test":
 			
-			if question:
+			if question:#is there unfinished tetst
 				send_message(message.chat.id, FINISH_THIS)
 			else:
 				send_message(message.chat.id, "Ммм,давай повторим")
 				add_new_test(message.chat.username)
 				
-			question=get_question(message.chat.username)	
-			send_question(message.chat.id,question)
+			send_question(message.chat.id,message.chat.username)
 
 		elif message.text=="/result":
 			if not question:
 				send_message(message.chat.id, "Тип результат")
+				#get_result -should return false if user in progress
 			else:
 				send_message(message.chat.id, FINISH_THIS)
 
@@ -35,6 +35,7 @@ def callback_inline(call):
     # Если сообщение из чата с ботом
     if call.message:
         send_message(call.message.chat.id, call.data)
+        #send_answer(message.chat.username,call.data)
 
 @bot.message_handler(content_types=["text"])
 def text_messages(message):
