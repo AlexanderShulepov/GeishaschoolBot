@@ -16,10 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping events for database 'GeishaSchool'
---
-
---
 -- Dumping routines for database 'GeishaSchool'
 --
 /*!50003 DROP FUNCTION IF EXISTS `add_new_test` */;
@@ -220,7 +216,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` FUNCTION `make_answer`(user_id int,points int) RETURNS int(11)
 BEGIN
 	UPDATE Test SET score=score+points, question_id=question_id+1 where Test.user_id=user_id and Test.result_id is null;
-    return (select question_id from Test where Test.user_id=user_id);
+    return (select question_id from Test where Test.user_id=user_id and Test.result_id is null);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -237,4 +233,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-02  3:09:14
+-- Dump completed on 2018-03-02 11:19:01

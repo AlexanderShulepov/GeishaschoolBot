@@ -33,6 +33,9 @@ def answers():#get list of answers
 		j = json.load(json_data)
 		return j
 
+question_json=questions()
+answers_json=answers()
+count_of_questions=len(question_json)
 
 def send_message(id,mgs):
 	bot.send_message(id, mgs)
@@ -41,21 +44,20 @@ def send_message(id,mgs):
 
 def send_question(user_id,username):
 		question_id=get_question_id(user_id)#get user's question_id
-		question=questions()[question_id-1] #and there get question
+		question=question_json[question_id-1] #and there get question
 		emblems=["А","Б","В","Г"]
 		keyboard = types.InlineKeyboardMarkup()		
 		answers=question["answers"]
-		QUESTION="Вопрос {0}: {1}\n".format(question_id, question["question"])
+		QUESTION="Вопрос {0}/{1}:\n {2}\n".format(question_id,count_of_questions, question["question"])
 		for idx in range(0,len(answers)):
-			QUESTION="{0}{1}) {2}\n".format(QUESTION,emblems[idx], answers[idx]["answer"])
-			##callback_data=points for answer
-			callback_button = types.InlineKeyboardButton(text=emblems[idx], callback_data=str(answers[idx]["points"]))
+			QUESTION="{0}{1}) {2}\n".format(QUESTION,emblems[idx], answers[idx]["answer"])	
+			callback_button = types.InlineKeyboardButton(text=emblems[idx], callback_data=str(answers[idx]["points"]))##callback_data=points for answer
 			keyboard.add(callback_button)
 		bot.send_message(user_id,text=QUESTION, reply_markup=keyboard)
 
 
 def count_result(score):
-	Answers=answers()
+	Answers=answers_json
 	for idx in range(0,len(Answers)):
 		Range=Answers[idx]["range"]
 		if score>Range[0] and score<Range[1]:
@@ -68,6 +70,6 @@ def send_result(user_id):
 	result=answers()[result_id]
 
 	keyboard = types.InlineKeyboardMarkup()	
-	callback_button = types.InlineKeyboardButton(text="Наше предложение", url='#result["url"]')
+	callback_button = types.InlineKeyboardButton(text="Наше предложение", url=result["url"])
 	keyboard.add(callback_button)
 	bot.send_message(user_id,text=result["result"], reply_markup=keyboard)

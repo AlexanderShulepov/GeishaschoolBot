@@ -38,7 +38,7 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (205449285,'Guardian_of_cookies','Алекс','Shulepov');
+INSERT INTO `User` VALUES (126189065,'ymenten','El','None'),(205449285,'Guardian_of_cookies','Александр','Шулепов'),(205449311,'Navvva','Нава','Куросаки'),(205449312,'FoxVlas','Виктория','Власенко'),(205449317,'Tequila','Виктория','Бушевич'),(205449318,'Tequila2','Виктория','Бушевич'),(205449320,'Mali','Виктория','Бушевич'),(455473368,'Archangel926','Никита','None');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-02  3:09:13
+-- Dump completed on 2018-03-02 11:19:00

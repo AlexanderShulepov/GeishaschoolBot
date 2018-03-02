@@ -37,7 +37,6 @@ BEGIN
 		return question_id;
 	end if;
 END;
-
 DELIMITER //
 select add_user(205449285,"Guardian_of_cookies","Алекс","Shulepov");
 select add_new_test(205449285);	

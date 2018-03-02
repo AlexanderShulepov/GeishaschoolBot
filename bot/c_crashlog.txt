@@ -1,1 +1,1 @@
-(1242, 'Subquery returns more than 1 row')
+Packet sequence number wrong - got 1 expected 1
