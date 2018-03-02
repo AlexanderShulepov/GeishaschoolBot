@@ -1,12 +1,13 @@
 import pymysql
 
-conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', db='GeishaSchool',charset='utf8mb4',use_unicode=True)
-db = conn.cursor()
 
 def MyQuery(query):	#mysql
+	conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', db='GeishaSchool',charset='utf8mb4',use_unicode=True)
+	db = conn.cursor()
 	db.execute(query)
 	query_result=[x for x in db]
 	conn.commit()
+	conn.close()
 	return query_result
     
 def add_user(user_id,username,first_name,last_name):
