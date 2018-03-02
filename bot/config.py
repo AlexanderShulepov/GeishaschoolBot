@@ -51,10 +51,9 @@ def send_question(user_id,username):
 		QUESTION="Вопрос {0}/{1}:\n {2}\n".format(question_id,count_of_questions, question["question"])
 		for idx in range(0,len(answers)):
 			QUESTION="{0}{1}) {2}\n".format(QUESTION,emblems[idx], answers[idx]["answer"])	
-			callback_button = types.InlineKeyboardButton(text=emblems[idx], callback_data=str(answers[idx]["points"]))##callback_data=points for answer
+			callback_button = types.InlineKeyboardButton(text=emblems[idx], callback_data="{0}:{1}".format(question_id,answers[idx]["points"]))##callback_data=points for answer
 			keyboard.add(callback_button)
 		bot.send_message(user_id,text=QUESTION, reply_markup=keyboard)
-
 
 def count_result(score):
 	Answers=answers_json

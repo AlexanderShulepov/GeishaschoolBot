@@ -47,12 +47,17 @@ def handle_commands(message):
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
 	c_id=call.message.chat.id
-	if call.message:
-		q_id=get_question_id(c_id)
+	q_id=get_question_id(c_id)
+	data=call.data.split(":")
+	if data[0]==str(q_id):
+		print("data[0]==q_id")
 		if q_id<=count_of_questions and q_id>0:
-			if make_answer(c_id, call.data)<=count_of_questions:###replace to len of json
+			print("if q_id<=count_of_questions and q_id>0")
+			if make_answer(c_id, data[1])<=count_of_questions:
+				print("make_answer")
 				send_question(c_id,call.message.chat.username)
 			else:
+				print("not make_answer")
 				score=get_score(c_id)
 				result_id=count_result(score)
 				finish_test(c_id,result_id)
