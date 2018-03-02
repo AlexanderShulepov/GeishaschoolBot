@@ -18,11 +18,11 @@ def handle_commands(message):
 			if get_question_id(c_id):#is there unfinished test         RENAME! 
 				send_message(c_id, FINISH_THIS)
 			else:
-
 				if is_newby(c_id):
-					send_message(message.chat.id, "Давай начнем")
+					send_message(c_id,LETS_START)
 				else:
-					send_message(message.chat.id, "Ммм,давай повторим")
+					
+					send_message(c_id,LETS_START_AGAIN )
 			add_new_test(c_id)
 			send_question(c_id,username)
 
@@ -34,7 +34,12 @@ def handle_commands(message):
 				else:
 					send_result(c_id)
 			else:
-				send_message(c_id, FINISH_THIS)
+				question_id=get_question_id(c_id)
+				if question_id>10:
+					score=get_score(c_id)
+					result_id=count_result(score)
+					finish_test(c_id,result_id)
+					send_result(c_id)
 
 
 @bot.callback_query_handler(func=lambda call: True)
