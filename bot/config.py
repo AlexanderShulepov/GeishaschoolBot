@@ -52,13 +52,13 @@ def send_question(user_id,username):
 		emblems=["А","Б","В","Г"]
 		keyboard = types.InlineKeyboardMarkup()		
 		answers=question["answers"]
-		QUESTION="Вопрос {0}/{1}:\n {2}\n".format(question_id,count_of_questions,question["question"])
+		QUESTION="_Вопрос {0}/{1}_:\n*{2}*\n".format(question_id,count_of_questions,question["question"])
 		btns=[]
 		for idx in range(0,len(answers)):
 			QUESTION="{0}{1}) {2}\n".format(QUESTION,emblems[idx], answers[idx]["answer"])	
 			callback_button = types.InlineKeyboardButton(emblems[idx], callback_data="{0}:{1}:{2}".format(question_id,answers[idx]["points"],emblems[idx]))##callback_data=points for answer
 			btns.append(callback_button)
-		keyboard.add(*btns)
+		keyboard.row(*btns)
 		bot.send_message(user_id,text=QUESTION, reply_markup=keyboard,parse_mode= 'Markdown')
 
 def count_result(score):

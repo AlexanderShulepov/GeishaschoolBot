@@ -1,1 +1,1 @@
-'NoneType' object has no attribute 'read'
+('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))

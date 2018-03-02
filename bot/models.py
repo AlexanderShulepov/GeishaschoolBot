@@ -17,7 +17,6 @@ def add_new_test(user_id):
     return MyQuery('select add_new_test({0})'.format(user_id))[0][0]
 
 def get_question_id(user_id):
-    #get q_json or null for call get_result
     return MyQuery('select get_question_id({0})'.format(user_id))[0][0]
 
 def is_finished_test(user_id):
@@ -37,6 +36,3 @@ def finish_test(user_id,result_id):
 
 def get_result_id(user_id):
 	return MyQuery('select get_result_id({0})'.format(user_id))[0][0]
- #def is_new 
-#def get_result(username):
-    #get json or false
