@@ -4,38 +4,50 @@ from models import *
 
 @bot.message_handler(commands=['start','test','result'])
 def handle_commands(message):
-		question=get_question(message.chat.username)
+		c_id=message.chat.id
+		username=message.chat.username
 		if message.text=="/start":
-			result_of_add=add_user(message.chat.username, message.chat.first_name, message.chat.last_name)
+			result_of_add=add_user(c_id,username, message.chat.first_name, message.chat.last_name)
 			if result_of_add:
-				add_new_test(message.chat.username)
-				send_message(message.chat.id, HELLO_NEWBY)
+				send_message(c_id, HELLO_NEWBY)
 			else:
-				send_message(message.chat.id, HELLO_AGAIN)
+				send_message(c_id, HELLO_AGAIN)
+
 
 		elif message.text=="/test":
-			
-			if question:#is there unfinished tetst
-				send_message(message.chat.id, FINISH_THIS)
+			if get_question_id(c_id):#is there unfinished test         RENAME! 
+				send_message(c_id, FINISH_THIS)
 			else:
-				send_message(message.chat.id, "Ммм,давай повторим")
-				add_new_test(message.chat.username)
-				
-			send_question(message.chat.id,message.chat.username)
+
+				if is_newby(c_id):
+					send_message(message.chat.id, "Давай начнем")
+				else:
+					send_message(message.chat.id, "Ммм,давай повторим")
+			add_new_test(c_id)
+			send_question(c_id,username)
+
 
 		elif message.text=="/result":
-			if not question:
-				send_message(message.chat.id, "Тип результат")
-				#get_result -should return false if user in progress
+			if is_finished_test(c_id):
+				if is_newby(c_id):
+					send_message(c_id, NO_TESTS)
+				else:
+					send_result(c_id)
 			else:
-				send_message(message.chat.id, FINISH_THIS)
+				send_message(c_id, FINISH_THIS)
+
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
-    # Если сообщение из чата с ботом
-    if call.message:
-        send_message(call.message.chat.id, call.data)
-        #send_answer(message.chat.username,call.data)
+	c_id=call.message.chat.id
+	if call.message:
+		if make_answer(c_id, call.data)<=10:###replace to len of json
+			send_question(c_id,call.message.chat.username)
+		else:
+			score=get_score(c_id)
+			result_id=count_result(score)
+			finish_test(c_id,result_id)
+			send_result(c_id)
 
 @bot.message_handler(content_types=["text"])
 def text_messages(message):
