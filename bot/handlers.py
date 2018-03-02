@@ -21,7 +21,6 @@ def handle_commands(message):
 				if is_newby(c_id):
 					send_message(c_id,LETS_START)
 				else:
-
 					send_message(c_id,LETS_START_AGAIN )
 			add_new_test(c_id)
 			send_question(c_id,username)
@@ -52,13 +51,15 @@ def callback_inline(call):
 	if data[0]==str(q_id):
 		if q_id<=count_of_questions and q_id>0:
 			if make_answer(c_id, data[1])<=count_of_questions:
+				#bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Пыщь")
 				send_question(c_id,call.message.chat.username)
 			else:
 				score=get_score(c_id)
 				result_id=count_result(score)
 				finish_test(c_id,result_id)
 				send_result(c_id)
+		edit_inline(c_id,call.message.message_id,data[2])
 
 @bot.message_handler(content_types=["text"])
 def text_messages(message):
-    bot.send_message(message.chat.id, "I'm alive!")
+    bot.send_message(message.chat.id, TEXT_REACTION)

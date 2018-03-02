@@ -19,6 +19,10 @@ FINISH_THIS="Honey, finish this test before"
 LETS_START="Давай начнем"
 NO_TEST="Рано вам!Пройдите хотя бы один"
 LETS_START_AGAIN="Ммм,давай повторим"
+TEXT_REACTION="I'm alive!"
+CAPTION_FOR_URL="Наше предложение"
+CHOICE_OF_USER='Вы выбрали: '
+
 ####################
 ##METHODS
 ####################
@@ -48,12 +52,14 @@ def send_question(user_id,username):
 		emblems=["А","Б","В","Г"]
 		keyboard = types.InlineKeyboardMarkup()		
 		answers=question["answers"]
-		QUESTION="Вопрос {0}/{1}:\n {2}\n".format(question_id,count_of_questions, question["question"])
+		QUESTION="Вопрос {0}/{1}:\n {2}\n".format(question_id,count_of_questions,question["question"])
+		btns=[]
 		for idx in range(0,len(answers)):
 			QUESTION="{0}{1}) {2}\n".format(QUESTION,emblems[idx], answers[idx]["answer"])	
-			callback_button = types.InlineKeyboardButton(text=emblems[idx], callback_data="{0}:{1}".format(question_id,answers[idx]["points"]))##callback_data=points for answer
-			keyboard.add(callback_button)
-		bot.send_message(user_id,text=QUESTION, reply_markup=keyboard)
+			callback_button = types.InlineKeyboardButton(emblems[idx], callback_data="{0}:{1}:{2}".format(question_id,answers[idx]["points"],emblems[idx]))##callback_data=points for answer
+			btns.append(callback_button)
+		keyboard.add(*btns)
+		bot.send_message(user_id,text=QUESTION, reply_markup=keyboard,parse_mode= 'Markdown')
 
 def count_result(score):
 	Answers=answers_json
@@ -63,12 +69,15 @@ def count_result(score):
 			return idx
 	return -1
 
-
+def edit_inline(c_id,m_id,emblem):
+	keyboard = types.InlineKeyboardMarkup()
+	keyboard.add(types.InlineKeyboardButton(CHOICE_OF_USER+emblem, callback_data='none'))
+	bot.edit_message_reply_markup(chat_id=c_id, message_id = m_id, reply_markup=keyboard)
 def send_result(user_id):
 	result_id=get_result_id(user_id)
 	result=answers()[result_id]
 
 	keyboard = types.InlineKeyboardMarkup()	
-	callback_button = types.InlineKeyboardButton(text="Наше предложение", url=result["url"])
+	callback_button = types.InlineKeyboardButton(text=CAPTION_FOR_URL, url=result["url"])
 	keyboard.add(callback_button)
 	bot.send_message(user_id,text=result["result"], reply_markup=keyboard)
