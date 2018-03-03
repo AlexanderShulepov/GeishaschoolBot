@@ -45,21 +45,30 @@ def send_message(id,mgs):
 	bot.send_message(id, mgs)
 
 
-
-def send_question(user_id,username):
-		question_id=get_question_id(user_id)#get user's question_id
-		question=question_json[question_id-1] #and there get question
+def get_keyboard(q_id,question,old_choice=""):
+		
 		emblems=["А","Б","В","Г"]
-		keyboard = types.InlineKeyboardMarkup()		
-		answers=question["answers"]
-		QUESTION="_Вопрос {0}/{1}_:\n*{2}*\n".format(question_id,count_of_questions,question["question"])
-		btns=[]
-		for idx in range(0,len(answers)):
-			QUESTION="{0}{1}) {2}\n".format(QUESTION,emblems[idx], answers[idx]["answer"])	
-			callback_button = types.InlineKeyboardButton(emblems[idx], callback_data="{0}:{1}:{2}".format(question_id,answers[idx]["points"],emblems[idx]))##callback_data=points for answer
-			btns.append(callback_button)
-		keyboard.row(*btns)
-		bot.send_message(user_id,text=QUESTION, reply_markup=keyboard,parse_mode= 'Markdown')
+		keyboard = types.InlineKeyboardMarkup()	
+		points=[question[q][1] for q in question]
+		row=[]
+		for idx in range(0,len(question)):
+			callback_button = types.InlineKeyboardButton(emblems[idx], 
+				callback_data="{0}:{1}:{2}:{3}".format(q_id,points[idx],
+														emblems[idx],old_choice))##callback_data=points for answer
+			row.append(callback_button)
+		keyboard.row(*row)
+		return keyboard
+
+def send_question(user_id,old_choice=""):
+		emblems=["А","Б","В","Г"]
+		question_id=get_question_id(user_id)#get user's question_id
+		body=get_question_body(question_id,old_choice)
+		QUESTION_TEXT="_Вопрос {0}/{1}_:\n*{2}*\n".format(question_id,count_of_questions,body.pop("question"))
+		for quest,emblem in zip(body,emblems):
+			QUESTION_TEXT="{0}{1}) {2}\n".format(QUESTION_TEXT,emblem, body[quest][0])
+		keyboard=get_keyboard(question_id,body,old_choice)
+		bot.send_message(user_id,text=QUESTION_TEXT,reply_markup=keyboard, parse_mode= 'Markdown')
+
 
 def count_result(score):
 	Answers=answers_json
@@ -69,10 +78,16 @@ def count_result(score):
 			return idx
 	return -1
 
-def edit_inline(c_id,m_id,emblem):
-	keyboard = types.InlineKeyboardMarkup()
-	keyboard.add(types.InlineKeyboardButton(CHOICE_OF_USER+emblem, callback_data='none'))
+def edit_prev_answ(c_id,m_id,q_id,prev_answ):
+	emblems=["А","Б","В","Г"]
+	body=get_question_body(int(q_id),prev_answ)
+	QUESTION_TEXT="_Вопрос {0}/{1}_:\n*{2}*\n".format(q_id,count_of_questions,body.pop("question"))
+	for quest,emblem in zip(body,emblems):
+		QUESTION_TEXT="{0}{1}) {2}\n".format(QUESTION_TEXT,emblem, body[quest][0])
+	keyboard=get_keyboard(q_id,body,prev_answ)
+	bot.edit_message_text(chat_id=c_id, message_id=m_id, text=QUESTION_TEXT,parse_mode= 'Markdown')
 	bot.edit_message_reply_markup(chat_id=c_id, message_id = m_id, reply_markup=keyboard)
+
 def send_result(user_id):
 	result_id=get_result_id(user_id)
 	result=answers()[result_id]
@@ -81,3 +96,24 @@ def send_result(user_id):
 	callback_button = types.InlineKeyboardButton(text=CAPTION_FOR_URL, url=result["url"])
 	keyboard.add(callback_button)
 	bot.send_message(user_id,text=result["result"], reply_markup=keyboard)
+
+def get_cost_of_choice(q_id,position_num):
+		emblems={"А":0,"Б":1,"В":2,"Г":3}
+		print (q_id,position_num)
+		position=emblems[position_num]
+		question=question_json[q_id-1]
+		cost=question["answers"][position]["points"]
+		return cost
+
+def get_question_body(q_id,old_choice=""):
+	emblems=["А","Б","В","Г"]
+	answers=question_json[q_id-1]
+	body={"question":answers["question"]}
+	for e,answer in zip(emblems,answers["answers"]):
+		body.update({e:[answer["answer"], answer["points"]]})
+		print(answer["answer"])
+	if old_choice:
+		body[old_choice][0]="*"+body[old_choice][0]+"*"
+	return body
+
+

@@ -28,6 +28,11 @@ def is_newby(user_id):
 def make_answer(user_id,points):
 	return MyQuery('select make_answer({0},{1})'.format(user_id,points))[0][0]
 
+def make_reanswer(user_id,old_points,new_points):
+	return MyQuery('select make_reanswer({0},{1},{2})'.format(user_id,old_points,new_points))[0][0]
+
+def make_answer(user_id,points):
+	return MyQuery('select make_answer({0},{1})'.format(user_id,points))[0][0]
 def get_score(user_id):
 	return MyQuery('select get_score({0})'.format(user_id))[0][0]
 

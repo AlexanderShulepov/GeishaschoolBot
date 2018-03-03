@@ -23,7 +23,7 @@ def handle_commands(message):
 				else:
 					send_message(c_id,LETS_START_AGAIN )
 			add_new_test(c_id)
-			send_question(c_id,username)
+			send_question(c_id)
 
 
 		elif message.text=="/result":
@@ -49,16 +49,20 @@ def callback_inline(call):
 	q_id=get_question_id(c_id)
 	data=call.data.split(":")
 	if data[0]==str(q_id):
-		if q_id<=count_of_questions and q_id>0:
-			if make_answer(c_id, data[1])<=count_of_questions:
+		if data[0]:
+			if make_answer(c_id, data[1])<=count_of_questions:#last question
 				#bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Пыщь")
-				send_question(c_id,call.message.chat.username)
+				send_question(c_id)
 			else:
 				score=get_score(c_id)
 				result_id=count_result(score)
 				finish_test(c_id,result_id)
 				send_result(c_id)
-		edit_inline(c_id,call.message.message_id,data[2])
+		edit_prev_answ(c_id,call.message.message_id,q_id,data[2])#
+	else:#old answer
+		if data[3]:
+			make_reanswer(c_id,get_cost_of_choice(q_id,data[3]),data[1])
+			edit_prev_answ(c_id,call.message.message_id,data[0],data[2])#
 
 @bot.message_handler(content_types=["text"])
 def text_messages(message):

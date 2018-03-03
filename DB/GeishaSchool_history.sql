@@ -16,30 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `User`
+-- Table structure for table `history`
 --
 
-DROP TABLE IF EXISTS `User`;
+DROP TABLE IF EXISTS `history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `User` (
-  `id` int(100) NOT NULL,
-  `username` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `first_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `last_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `question_id` int(11) DEFAULT NULL,
+  `score` int(11) DEFAULT NULL,
+  `answer_tsmp` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `User`
+-- Dumping data for table `history`
 --
 
-LOCK TABLES `User` WRITE;
-/*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (126189065,'ymenten','El','None'),(175140584,'kriskrutik','Kris','None'),(205449285,'Guardian_of_cookies','Александр','Шулепов'),(205449311,'Navvva','Нава','Куросаки'),(205449312,'FoxVlas','Виктория','Власенко'),(205449317,'Tequila','Виктория','Бушевич'),(205449318,'Tequila2','Виктория','Бушевич'),(205449320,'Mali','Виктория','Бушевич'),(219523639,'None','Марина','Чемолдинова'),(324159746,'None','kseniya','kseniya'),(330118995,'None','Kurosaki','Nava'),(400914105,'serakhimov','Севастьян','Рахимов'),(455473368,'Archangel926','Никита','None'),(536216909,'odeyalo_podushki','Михаил','None');
-/*!40000 ALTER TABLE `User` ENABLE KEYS */;
+LOCK TABLES `history` WRITE;
+/*!40000 ALTER TABLE `history` DISABLE KEYS */;
+/*!40000 ALTER TABLE `history` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

@@ -98,6 +98,16 @@ BEGIN
     end if;
 END;
 
+
+DELIMITER //
+CREATE FUNCTION make_reanswer(user_id int,old_points int,new_points int) RETURNS bool
+BEGIN
+	UPDATE Test SET score=score-old_points+new_points where Test.user_id=user_id and Test.result_id is null;
+    return true;
+END;
+
+
+
 SELECT id FROM Test WHERE Test.User_id=205449285 and result_id is  NULL
 select result_id from Test where Test.user_id=205449285 and Test.result_id is not null order by Test.start_date DESC LIMIT 1
 
