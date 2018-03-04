@@ -1,6 +1,6 @@
 from config import *
 from models import *
-
+import time
 
 @bot.message_handler(commands=['start','test','result'])
 def handle_commands(message):
@@ -45,24 +45,32 @@ def handle_commands(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
-	c_id=call.message.chat.id
-	q_id=get_question_id(c_id)
-	data=call.data.split(":")
-	if data[0]==str(q_id):
-		if data[0]:
-			if make_answer(c_id, data[1])<=count_of_questions:#last question
-				#bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Пыщь")
-				send_question(c_id)
-			else:
-				score=get_score(c_id)
-				result_id=count_result(score)
-				finish_test(c_id,result_id)
-				send_result(c_id)
-		edit_prev_answ(c_id,call.message.message_id,q_id,data[2])#
-	else:#old answer
-		if data[3]:
-			make_reanswer(c_id,get_cost_of_choice(q_id,data[3]),data[1])
-			edit_prev_answ(c_id,call.message.message_id,data[0],data[2])#
+	try:
+		c_id=call.message.chat.id
+		q_id=get_question_id(c_id)
+		data=call.data.split(":")
+		print(data)
+		if data[0]==str(q_id):
+			if data[0]:
+				if make_answer(c_id, data[1])<=count_of_questions:#last question
+					send_question(c_id)
+				else:
+					score=get_score(c_id)
+					result_id=count_result(score)
+					finish_test(c_id,result_id)
+					send_result(c_id)
+			edit_prev_answ(c_id,call.message.message_id,q_id,data[2])#
+		else:#old answer
+				if data[3]:
+					time.sleep(2)
+					make_reanswer(c_id,get_cost_of_choice(data[0],data[3]),data[1])
+					edit_prev_answ(c_id,call.message.message_id,data[0],data[2])#
+				#else:
+				 #send_message(c_id,SORRY)
+
+	except Exception as e:
+			print ("error",type(e))
+			send_message(c_id, DDOS)
 
 @bot.message_handler(content_types=["text"])
 def text_messages(message):
