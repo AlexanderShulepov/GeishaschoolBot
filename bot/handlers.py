@@ -46,32 +46,30 @@ def handle_commands(message):
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
 	try:
+		time.sleep(2)
 		c_id=call.message.chat.id
 		q_id=get_question_id(c_id)
-		data=call.data.split(":")
-		print(data)
-		if data[0]==str(q_id):
-			if data[0]:
-				if make_answer(c_id, data[1])<=count_of_questions:#last question
+		data=call.data.split(":")# data=question_id:points:emblem:prev answer emblem 
+		if data[0]==str(q_id):#editing answer or giving new
+				if make_answer(c_id, data[1])<=count_of_questions:#checking for answer on last question
 					send_question(c_id)
 				else:
 					score=get_score(c_id)
 					result_id=count_result(score)
 					finish_test(c_id,result_id)
 					send_result(c_id)
-			edit_prev_answ(c_id,call.message.message_id,q_id,data[2])#
+				edit_prev_answ(c_id,call.message.message_id,q_id,data[2])#
 		else:#old answer
 				if data[3]:
-					time.sleep(2)
 					make_reanswer(c_id,get_cost_of_choice(data[0],data[3]),data[1])
 					edit_prev_answ(c_id,call.message.message_id,data[0],data[2])#
-				#else:
-				 #send_message(c_id,SORRY)
-
+				elif q_id-int(data[0])!=1:
+				 send_message(c_id,SORRY)
 	except Exception as e:
-			print ("error",type(e))
+			print(e)
 			send_message(c_id, DDOS)
 
 @bot.message_handler(content_types=["text"])
 def text_messages(message):
-    bot.send_message(message.chat.id, TEXT_REACTION)
+	pass
+    #bot.send_message(message.chat.id, TEXT_REACTION)

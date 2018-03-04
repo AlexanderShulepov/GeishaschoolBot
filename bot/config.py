@@ -13,6 +13,8 @@ from models import *
 ####################
 ##CONSTS
 ####################
+SITE_URL="https://geishaschool.ru/reg/"
+
 HELLO_NEWBY="Welcome /test"
 HELLO_AGAIN="Welcome back! /test"
 FINISH_THIS="Honey, finish this test before"
@@ -47,7 +49,6 @@ def send_message(id,mgs):
 
 
 def get_keyboard(q_id,question,old_choice=""):
-		
 		emblems=["А","Б","В","Г"]
 		keyboard = types.InlineKeyboardMarkup()	
 		row=[]
@@ -97,6 +98,8 @@ def send_result(user_id):
 	callback_button = types.InlineKeyboardButton(text=CAPTION_FOR_URL, url=result["url"])
 	keyboard.add(callback_button)
 	bot.send_message(user_id,text=result["result"], reply_markup=keyboard)
+	bot.send_message(user_id,text=result["promo"])
+	bot.send_message(user_id,text=SITE_URL)
 
 def get_cost_of_choice(q_id,position_num):
 		emblems={"А":1,"Б":2,"В":3,"Г":4}
