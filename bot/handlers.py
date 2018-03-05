@@ -12,7 +12,7 @@ def handle_commands(message):
 					add_new_test(c_id)
 			send_question(c_id)
 
-		elif message.text=="/result"
+		elif message.text=="/result":
 			if is_finished_test(c_id):
 				if is_newby(c_id):
 					send_message(c_id, NO_TESTS)
@@ -36,12 +36,12 @@ def callback_inline(call):
 		q_id=get_question_id(c_id)
 		data=call.data.split(":")# data=question_id:points:emblem:prev answer emblem 
 		print(data)
-		if data[0]=='0':
+		if data[0]=='0':#promo inline
 			send_promo(c_id,get_result_id(c_id))
 		elif data[0]==str(q_id):#editing answer or giving new
-				if make_answer(c_id, data[1])<=count_of_questions:#checking for answer is last question
+				if make_answer(c_id, data[1])<=count_of_questions:#checking for answer on last question
 					send_question(c_id)#not last
-				else:#last
+				else:
 					score=get_score(c_id)
 					result_id=count_result(score)
 					finish_test(c_id,result_id)
