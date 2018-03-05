@@ -15,7 +15,6 @@ from models import *
 ##CONSTS
 ####################
 SITE_URL="https://geishaschool.ru/reg/"
-
 HELLO_NEWBY="Welcome /test"
 HELLO_AGAIN="Welcome back! /test"
 FINISH_THIS="Honey, finish this test before"
@@ -25,8 +24,10 @@ LETS_START_AGAIN="Ммм,давай повторим"
 TEXT_REACTION="Here goes help"
 CAPTION_FOR_URL="Наше предложение"
 CHOICE_OF_USER='Вы выбрали: '
-DDOS="Извините,технические неполадки,попробуйте продолжить через одну минуту "
-SORRY="Извините,технические неполадки,попробуйте получить текущий вопрос заново:/test"
+DDOS="Извините,технические неполадки,попробуйте продолжить через несколько минут "
+SORRY="Извините,технические неполадки,попробуйте получить текущий вопрос заново:/start"
+PROMO_TEXT="Больше уроков вы можете найти на нашем сайте:"
+FREE_LESSON="Бесплатный урок"
 ####################
 ##METHODS
 ####################
@@ -94,13 +95,18 @@ def edit_prev_answ(c_id,m_id,q_id,prev_answ):
 def send_result(user_id):
 	result_id=get_result_id(user_id)
 	result=answers()[result_id]
-
 	keyboard = types.InlineKeyboardMarkup()	
-	callback_button = types.InlineKeyboardButton(text=CAPTION_FOR_URL, url=result["url"])
+	callback_button = types.InlineKeyboardButton(text=FREE_LESSON, callback_data="0:"+str(result_id))
 	keyboard.add(callback_button)
-	bot.send_message(user_id,text=result["result"], reply_markup=keyboard)
+	bot.send_message(user_id,text="*Ваш результат:\n*"+result["result"], parse_mode= 'Markdown',reply_markup=keyboard)
+
+def send_promo(user_id,result_id):
+	result=answers()[result_id]
 	bot.send_message(user_id,text=result["promo"])
-	bot.send_message(user_id,text=SITE_URL)
+	callback_button = types.InlineKeyboardButton(text="Школа Гейша", url=SITE_URL)
+	keyboard = types.InlineKeyboardMarkup()	
+	keyboard.add(callback_button)
+	bot.send_message(user_id,text=PROMO_TEXT,reply_markup=keyboard)
 
 def get_cost_of_choice(q_id,position_num):
 		emblems={"А":1,"Б":2,"В":3,"Г":4}
