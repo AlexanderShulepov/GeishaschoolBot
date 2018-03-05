@@ -8,23 +8,9 @@ def handle_commands(message):
 		username=message.chat.username
 		if message.text=="/start":
 			result_of_add=add_user(c_id,username, message.chat.first_name, message.chat.last_name)
-			if result_of_add:
-				send_message(c_id, HELLO_NEWBY)
-			else:
-				send_message(c_id, HELLO_AGAIN)
-
-
-		elif message.text=="/test":
-			if get_question_id(c_id):
-				send_message(c_id, FINISH_THIS)
-			else:
-				if is_newby(c_id):
-					send_message(c_id,LETS_START)
-				else:
-					send_message(c_id,LETS_START_AGAIN )
-			add_new_test(c_id)
+			if get_question_id(c_id)==0:
+					add_new_test(c_id)
 			send_question(c_id)
-
 
 		elif message.text=="/result":
 			if is_finished_test(c_id):
@@ -46,7 +32,6 @@ def handle_commands(message):
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
 	try:
-		time.sleep(2)
 		c_id=call.message.chat.id
 		q_id=get_question_id(c_id)
 		data=call.data.split(":")# data=question_id:points:emblem:prev answer emblem 
