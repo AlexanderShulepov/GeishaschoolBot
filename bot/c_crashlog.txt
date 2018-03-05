@@ -1,1 +1,1 @@
-'datetime.timedelta' object has no attribute 'seonds'
+('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
