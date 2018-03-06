@@ -26,8 +26,8 @@ CAPTION_FOR_URL="Наше предложение"
 CHOICE_OF_USER='Вы выбрали: '
 DDOS="Извините,технические неполадки,попробуйте продолжить через несколько минут "
 SORRY="Извините,технические неполадки,попробуйте получить текущий вопрос заново:/start"
-PROMO_TEXT="Больше уроков вы можете найти на нашем сайте:"
-FREE_LESSON="Бесплатный урок"
+PROMO_TEXT="Смотреть больше уроков:"
+FREE_LESSON="Посмотреть бесплатный урок"
 ####################
 ##METHODS
 ####################
@@ -55,7 +55,10 @@ def get_keyboard(q_id,question,old_choice=""):
 		keyboard = types.InlineKeyboardMarkup()	
 		row=[]
 		for emblem in emblems:
-			callback_button = types.InlineKeyboardButton(emblem, 
+			Emblem=emblem
+			if emblem==old_choice:
+				Emblem=Emblem+"*"
+			callback_button = types.InlineKeyboardButton(Emblem, 
 				callback_data="{0}:{1}:{2}:{3}".format(q_id,question[emblem][1], emblem, old_choice))
 			row.append(callback_button)
 		keyboard.row(*row)
@@ -84,12 +87,7 @@ def count_result(score):
 def edit_prev_answ(c_id,m_id,q_id,prev_answ):
 	emblems=["А","Б","В","Г"]
 	body=get_question_body(int(q_id),prev_answ)
-	QUESTION_TEXT="_Вопрос {0}/{1}_:\n*{2}*\n".format(q_id,count_of_questions,body.pop("question"))
-	for emblem in emblems:
-		QUESTION_TEXT="{0}{1}) {2}\n".format(QUESTION_TEXT,emblem, body[emblem][0])
-
 	keyboard=get_keyboard(q_id,body,prev_answ)
-	bot.edit_message_text(chat_id=c_id, message_id=m_id, text=QUESTION_TEXT,parse_mode= 'Markdown')
 	bot.edit_message_reply_markup(chat_id=c_id, message_id = m_id, reply_markup=keyboard)
 
 def send_result(user_id):
@@ -102,12 +100,12 @@ def send_result(user_id):
 
 def send_promo(user_id,result_id):
 	result=answers()[result_id]
-	bot.send_message(user_id,text=result["promo"])
-	callback_button = types.InlineKeyboardButton(text="Школа Гейша", url=SITE_URL)
+	
+	callback_button = types.InlineKeyboardButton(text=PROMO_TEXT, url=SITE_URL)
 	keyboard = types.InlineKeyboardMarkup()	
 	keyboard.add(callback_button)
-	bot.send_message(user_id,text=PROMO_TEXT,reply_markup=keyboard)
-
+	bot.send_message(user_id,text=result["promo"],reply_markup=keyboard)
+	
 def get_cost_of_choice(q_id,position_num):
 		emblems={"А":1,"Б":2,"В":3,"Г":4}
 		position=emblems[position_num]-1
