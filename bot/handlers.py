@@ -9,6 +9,7 @@ def handle_commands(message):
 		if message.text=="/start":
 			result_of_add=add_user(c_id,username, message.chat.first_name, message.chat.last_name)
 			if get_question_id(c_id)==0:
+					send_start_keyboard(c_id)
 					add_new_test(c_id)
 			send_question(c_id)
 
@@ -34,29 +35,37 @@ def callback_inline(call):
 	try:
 		c_id=call.message.chat.id
 		q_id=get_question_id(c_id)
-		data=call.data.split(":")# data=question_id:points:emblem:prev answer emblem 
-		if data[0]=='0':#promo inline
-			send_promo(c_id,int(data[1]))
-		elif data[0]==str(q_id):#editing answer or giving new
-				if make_answer(c_id, data[1])<=count_of_questions:#checking for answer on last question
-					send_question(c_id)#not last
-				else:
-					score=get_score(c_id)
-					result_id=count_result(score)
-					finish_test(c_id,result_id)
-					send_result(c_id)
-				edit_prev_answ(c_id,call.message.message_id,q_id,data[2])#
-		elif q_id-int(data[0])==1 and data[3]=='':
-				send_message(c_id,SORRY)#error handler
-		elif data[2]!=data[3]:#reanswer
-				make_reanswer(c_id,get_cost_of_choice(data[0],data[3]),data[1])
-				edit_prev_answ(c_id,call.message.message_id,data[0],data[2])
-		else:
-			bot.answer_callback_query(call.id, "Вы уже выбрали этот ответ")
-	except Exception as e:
+		data=call.data.split(':')
 
+		if data[0]=='0':#promo inline
+			#edit_prev_answ(c_id,call.message.message_id)
+			send_promo(c_id,data[1])
+			
+	except Exception as e:
+		pass
 
 @bot.message_handler(content_types=["text"])
 def text_messages(message):
-	pass
-    #bot.send_message(message.chat.id, TEXT_REACTION)
+	time.sleep(1)
+	answs=["А","Б","В","Г"]
+	c_id=message.chat.id
+	q_id=get_question_id(c_id)
+	print(q_id)
+	if not is_finished_test(c_id):
+		if get_question_id(c_id)<=count_of_questions:#answer
+				answer=message.text.strip().upper()
+				if message.text.strip().upper() in answs:
+					answer_cost=get_cost_of_choice(q_id,answer)
+					if make_answer(c_id, answer_cost)<=count_of_questions:#checking for answer on last question
+						send_question(c_id)#not last
+					else:
+						score=get_score(c_id)
+						result_id=count_result(score)
+						finish_test(c_id,result_id)
+						send_result(c_id)
+				else:
+					send_message(c_id,HELLO)
+		else:#just trash
+			pass
+	else:
+		send_message(c_id,WITH_FINISHED_TEST)
